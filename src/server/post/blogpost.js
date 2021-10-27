@@ -5,6 +5,7 @@ import createHttpError from 'http-errors';
 import { blogValidator } from '../post/validation.js';
 import { validationResult } from 'express-validator';
 import { getPost, writePost, blogImag, postStream } from '../../fs-tools.js';
+import { pdfReadableStream } from './postPDF.js';
 
 import { createGzip } from 'zlib';
 import { pipeline } from 'stream';
