@@ -4,7 +4,19 @@ import express from 'express';
 import createHttpError from 'http-errors';
 import { blogValidator } from '../post/validation.js';
 import { validationResult } from 'express-validator';
-import { getPost, writePost, blogImag } from '../../fs-tools.js';
+import { getPost, writePost, blogImag, postStream } from '../../fs-tools.js';
+
+import { createGzip } from 'zlib';
+import { pipeline } from 'stream';
+import { v2 as cloudinary } from 'cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
+
+const cloudinaryStorage = new CloudinaryStorage({
+	cloudinary,
+	params: {
+		folder: 'blog-post',
+	},
+});
 
 const blogpostRounter = express.Router();
 

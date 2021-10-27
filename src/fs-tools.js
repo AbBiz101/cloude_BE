@@ -2,7 +2,7 @@ import fs from 'fs-extra';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
-const { readJSON, writeJSON, writeFile } = fs;
+const { readJSON, writeJSON, writeFile, createReadStream } = fs;
 
 const blogpostJSON = join(
 	dirname(fileURLToPath(import.meta.url)),
@@ -29,4 +29,4 @@ export const authorImag = (filename, buffer) => {
 	writeFile(join(authorImgFolder, filename), buffer);
 };
 
-
+export const postStream = () => createReadStream(blogpostJSON);
