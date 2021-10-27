@@ -6,8 +6,6 @@ import { blogValidator } from '../post/validation.js';
 import { validationResult } from 'express-validator';
 import { getPost, writePost, blogImag, postStream } from '../../fs-tools.js';
 import { pdfReadableStream } from './postPDF.js';
-
-import { createGzip } from 'zlib';
 import { pipeline } from 'stream';
 import { v2 as cloudinary } from 'cloudinary';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
@@ -94,17 +92,19 @@ blogpostRounter.delete('/:postID', async (req, res, next) => {
 	}
 });
 
-blogpostRounter.get('/downloadPDF', (req, res, next) => {
+blogpostRounter.get('/:id/downloadPDF', (req, res, next) => {
 	try {
 		res.setHeader('Content-Disposition', 'attachment; filename=blogpost.pdf');
 		const source = pdfReadableStream({ firstName: 'blogpost' });
-
-		pipeline(source, res, (err) => {
+		const destination = res;
+		console.error('req send');
+		pipeline(source, destination, (err) => {
 			if (err) {
 				next(err);
 			}
 		});
 	} catch (error) {
+		console.error('req send');
 		next(error);
 	}
 });
