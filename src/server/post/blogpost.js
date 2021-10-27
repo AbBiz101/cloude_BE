@@ -94,33 +94,11 @@ blogpostRounter.delete('/:postID', async (req, res, next) => {
 	}
 });
 
-blogpostRounter.get('/downloadJSON', async (req, res, next) => {
-	try {
-		res.setHeader('Content-Disposition', 'attachment; filename=blogpost.json');
-
-		const source = postStream();
-		const transform = createGzip();
-		const destination = res;
-
-		pipeline(source, transform, destination, (err) => {
-			if (err) next(err);
-		});
-	} catch (error) {
-		next(error);
-	}
-});
-
 blogpostRounter.get('/downloadPDF', (req, res, next) => {
 	try {
-		res.setHeader(
-			'Content-Disposition',
-			'attachment; filename=MyfirstPost.pdf',
-		);
-
-		const source = pdfReadableStream({ firstName: 'MyfirstPost' });
-		const destination = res;
-
-		pipeline(source, destination, (err) => {
+		res.setHeader('Content-Disposition', 'attachment; filename=blogpost.pdf');
+		const source = pdfReadableStream({ firstName: 'blogpost' });
+		pipeline(source, res, (err) => {
 			if (err) next(err);
 		});
 	} catch (error) {
