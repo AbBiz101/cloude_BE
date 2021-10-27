@@ -98,8 +98,11 @@ blogpostRounter.get('/downloadPDF', (req, res, next) => {
 	try {
 		res.setHeader('Content-Disposition', 'attachment; filename=blogpost.pdf');
 		const source = pdfReadableStream({ firstName: 'blogpost' });
+
 		pipeline(source, res, (err) => {
-			if (err) next(err);
+			if (err) {
+				next(err);
+			}
 		});
 	} catch (error) {
 		next(error);
