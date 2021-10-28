@@ -1,6 +1,7 @@
 import fs from 'fs-extra';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
+import sgMail from '@sendgrid/mail';
 
 const { readJSON, writeJSON, writeFile, createReadStream } = fs;
 
@@ -14,7 +15,7 @@ const authorJSON = join(
 );
 
 export const getPost = () => readJSON(blogpostJSON);
-export const writePost = (post) => writeJSON(blogpostJSON,post);
+export const writePost = (post) => writeJSON(blogpostJSON, post);
 
 export const getAuthor = () => readJSON(authorJSON);
 export const writeAuthor = (post) => writeJSON(authorJSON, post);
@@ -30,3 +31,16 @@ export const authorImag = (filename, buffer) => {
 };
 
 export const postStream = () => createReadStream(blogpostJSON);
+
+sgMail.setApiKey(process.env.SENDGRID_KEY); // Do not forget this and double check that process.env.SENDGRID_KEY is NOT undefined
+
+export const sendRegistrationEmail = async (recipientAddress) => {
+	const msg = {
+		to: recipientAddress,
+		from: process.env.SENDER_EMAIL,
+		subject: 'Sending with Twilio SendGrid is Fun',
+		text: 'and easy to do anywhere, even with Node.js',
+		html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+	};
+	await sgMail.send(msg);
+};
