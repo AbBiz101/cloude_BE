@@ -15,7 +15,6 @@ const server = express();
 const whiteList = [process.env.FE_LOCAL_URL, process.env.FE_PROD_URL];
 const corsOpts = {
 	origin: function (origin, next) {
-		console.log('current origin:',origin);
 		if (!origin || whiteList.indexOf(origin) !== -1) {
 			next(null, true);
 		} else {

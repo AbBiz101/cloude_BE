@@ -4,7 +4,7 @@
 		"surname": "Daugherty",
 		"email": "Sigmund43@yahoo.com",
 		"date of birth": "Mon Feb 08 2021 04:09:24 GMT+0100 (Central European Standard Time)",
-		"avatar": "http://placeimg.com/640/480",
+		"avatar": "https://res.cloudinary.com/db8gmza63/image/upload/v1635470230/author_img/yyjac1l8qgr4bgg5iviz.jpg",
 		"createdAt": "2021-10-22T15:12:15.281Z",
 		"id": "162lwu844kv2ihwoi"
 	},
@@ -52,5 +52,13 @@
 		"avatar": "http://placeimg.com/640/480",
 		"createdAt": "2021-10-26T04:52:48.788Z",
 		"id": "162lwummgkv7m4phw"
+	},
+	{
+		"name": "cryptonote",
+		"surname": "Daugherty",
+		"email": "Sigmudddddnd43@yahoo.com",
+		"date of birth": "Mon Feb 08 2021 04:09:24 GMT+0100 (Central European Standard Time)",
+		"createdAt": "2021-10-29T00:38:37.647Z",
+		"id": "162lwugqokvbnddn4"
 	}
 ]

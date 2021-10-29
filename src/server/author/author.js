@@ -56,7 +56,11 @@ authorsRounter.post(
 	multer({ storage: cloudinaryStorage }).single('profilePic'),
 	async (req, res, next) => {
 		try {
-			await authorImag(req.file.originalname, req.file.buffer);
+			const author = await getAuthor();
+			const singleAuthor = author.findIndex((p) => p.id === req.params.id);
+			const newAuthor = { ...author[singleAuthor], avatar: req.file.path };
+			author[singleAuthor] = newAuthor;
+			await writeAuthor(author);
 			res.send('ok');
 		} catch (error) {
 			next(error);

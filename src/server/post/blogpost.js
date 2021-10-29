@@ -24,13 +24,18 @@ blogpostRounter.post(
 	multer({ storage: cloudinaryStorage }).single('profilePic'),
 	async (req, res, next) => {
 		try {
-			await blogImag(req.file.originalname, req.file.buffer);
+			const post = await getPost();
+			const singlePost = post.findIndex((p) => p.id === req.params.id);
+			const newPost = { ...post[singlePost], cover: req.file.path };
+			post[singlePost] = newPost;
+			await writePost(post);
 			res.send('ok');
 		} catch (error) {
 			next(error);
 		}
 	},
 );
+
 blogpostRounter.post('/', blogValidator, async (req, res, next) => {
 	try {
 		const errorsList = validationResult(req);
