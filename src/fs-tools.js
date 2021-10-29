@@ -2,17 +2,14 @@ import fs from 'fs-extra';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import sgMail from '@sendgrid/mail';
-
 const { readJSON, writeJSON, writeFile, createReadStream } = fs;
 
-const blogpostJSON = join(
+const dataFolder = join(
 	dirname(fileURLToPath(import.meta.url)),
-	'./server/data/blogpost.json',
+	'../src/server/data',
 );
-const authorJSON = join(
-	dirname(fileURLToPath(import.meta.url)),
-	'./server/data/author.json',
-);
+const blogpostJSON = join(dataFolder, 'blogpost.json');
+const authorJSON = join(dataFolder, 'author.json');
 
 export const getPost = () => readJSON(blogpostJSON);
 export const writePost = (post) => writeJSON(blogpostJSON, post);
@@ -30,7 +27,7 @@ export const authorImag = (filename, buffer) => {
 	writeFile(join(authorImgFolder, filename), buffer);
 };
 
-export const postStream = () => createReadStream(blogpostJSON);
+export const postReadStream = () => createReadStream(blogpostJSON);
 
 sgMail.setApiKey(process.env.SENDGRID_KEY); // Do not forget this and double check that process.env.SENDGRID_KEY is NOT undefined
 

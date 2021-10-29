@@ -1,13 +1,20 @@
+import {
+	getPost,
+	writePost,
+	blogImag,
+	postReadStream,
+} from '../../fs-tools.js';
 import multer from 'multer';
 import uniqid from 'uniqid';
 import express from 'express';
-import createHttpError from 'http-errors';
-import { blogValidator } from '../post/validation.js';
-import { validationResult } from 'express-validator';
-import { getPost, writePost, blogImag, postStream } from '../../fs-tools.js';
-import { pdfReadableStream } from './postPDF.js';
 import { pipeline } from 'stream';
+import { createGzip } from 'zlib';
+import { json2csv } from 'json2csv';
+import createHttpError from 'http-errors';
 import { v2 as cloudinary } from 'cloudinary';
+import { pdfReadableStream } from './postPDF.js';
+import { validationResult } from 'express-validator';
+import { blogValidator } from '../post/validation.js';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
 const cloudinaryStorage = new CloudinaryStorage({
@@ -16,7 +23,7 @@ const cloudinaryStorage = new CloudinaryStorage({
 		folder: 'blog-post',
 	},
 });
-
+const {jsoncsv} = json2csv;
 const blogpostRounter = express.Router();
 
 blogpostRounter.post(
@@ -97,19 +104,67 @@ blogpostRounter.delete('/:postID', async (req, res, next) => {
 	}
 });
 
-blogpostRounter.get('/:id/downloadPDF', (req, res, next) => {
+// blogpostRounter.get('/:id/downloadPDF', (req, res, next) => {
+// 	try {
+// 		res.setHeader('Content-Disposition', 'attachment; filename=blogpost.pdf');
+// 		const source = pdfReadableStream({ firstName: 'blogpost' });
+// 		const destination = res;
+// 		console.error('req send');
+// 		pipeline(source, destination, (err) => {
+// 			if (err) {
+// 				next(err);
+// 			}
+// 		});
+// 	} catch (error) {
+// 		console.error('req send');
+// 		next(error);
+// 	}
+// });
+
+// blogpostRounter.get('/downloadJSON', async (req, res, next) => {
+// 	try {
+// 		res.setHeader('Content-Disposition', 'attachment: filename=post.json.gz');
+// 		const source = postReadStream();
+// 		const zipFile = createGzip();
+// 		const destination = res;
+// 		pipeline(source, zipFile, destination, (err) => {
+// 			if (err) next(err);
+// 		});
+// 	} catch (error) {
+// 		next(error);
+// 	}
+// });
+
+blogpostRounter.get('/downloadJSON', async (req, res, next) => {
 	try {
-		res.setHeader('Content-Disposition', 'attachment; filename=blogpost.pdf');
-		const source = pdfReadableStream({ firstName: 'blogpost' });
+		res.setHeader(
+			'Content-Disposition',
+			'attachment; filename=whatever.json.gz',
+		);
+		const post = await getPost();
+		const source = createReadStream(post);
+		const transform = createGzip();
 		const destination = res;
-		console.error('req send');
-		pipeline(source, destination, (err) => {
-			if (err) {
-				next(err);
-			}
+
+		pipeline(source, transform, destination, (err) => {
+			if (err) next(err);
 		});
 	} catch (error) {
-		console.error('req send');
+		next(error);
+	}
+});
+
+blogpostRounter.get('/downloadCSV', async (req, res, next) => {
+	try {
+		const source = postReadStream();
+		const destination = res;
+		const transform = new json2csv.Transform({
+			fields: ['category', 'title', 'readTime'],
+		});
+		pipeline(source, transform, destination, (err) => {
+			if (err) next(err);
+		});
+	} catch (error) {
 		next(error);
 	}
 });
