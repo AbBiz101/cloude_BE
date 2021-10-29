@@ -20,8 +20,8 @@ const cloudinaryStorage = new CloudinaryStorage({
 const blogpostRounter = express.Router();
 
 blogpostRounter.post(
-	'/:post/coverimg',
-	multer().single('profilePic'),
+	'/:id/coverimg',
+	multer({ storage: cloudinaryStorage }).single('profilePic'),
 	async (req, res, next) => {
 		try {
 			await blogImag(req.file.originalname, req.file.buffer);

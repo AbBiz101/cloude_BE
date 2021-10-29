@@ -5,7 +5,15 @@ import createHttpError from 'http-errors';
 import { authorValidator } from '../author/validator.js';
 import { validationResult } from 'express-validator';
 import { getAuthor, writeAuthor, authorImag } from '../../fs-tools.js';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import { v2 as cloudinary } from 'cloudinary';
 
+const cloudinaryStorage = new CloudinaryStorage({
+	cloudinary,
+	params: {
+		folder: 'author_img',
+	},
+});
 const authorsRounter = express.Router();
 
 authorsRounter.post('/', authorValidator, async (req, res, next) => {
@@ -28,9 +36,24 @@ authorsRounter.post('/', authorValidator, async (req, res, next) => {
 		next(error);
 	}
 });
+
+// if i want to stor it locally
+// authorsRounter.post(
+// 	'/:id/coverimg',
+// 	multer().single('profilePic'),
+// 	async (req, res, next) => {
+// 		try {
+// 			await authorImag(req.file.originalname, req.file.buffer);
+// 			res.send('ok');
+// 		} catch (error) {
+// 			next(error);
+// 		}
+// 	},
+// );
+
 authorsRounter.post(
 	'/:id/coverimg',
-	multer().single('profilePic'),
+	multer({ storage: cloudinaryStorage }).single('profilePic'),
 	async (req, res, next) => {
 		try {
 			await authorImag(req.file.originalname, req.file.buffer);
@@ -40,6 +63,7 @@ authorsRounter.post(
 		}
 	},
 );
+
 authorsRounter.get('/', async (req, res, next) => {
 	try {
 		const author = await getAuthor();
@@ -65,7 +89,7 @@ authorsRounter.put('/:id', async (req, res, next) => {
 		author[authorIndex] = editedAuthor;
 		await writeAuthor(author);
 		res.send(editedAuthor);
-		88
+		88;
 	} catch (error) {
 		next(error);
 	}

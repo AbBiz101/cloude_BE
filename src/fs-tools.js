@@ -44,3 +44,5 @@ export const sendRegistrationEmail = async (recipientAddress) => {
 	};
 	await sgMail.send(msg);
 };
+
+// https://github.com/LorenzoGiorgini/M5-D7-HerokuApp-BE
