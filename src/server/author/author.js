@@ -93,7 +93,6 @@ authorsRounter.put('/:id', async (req, res, next) => {
 		author[authorIndex] = editedAuthor;
 		await writeAuthor(author);
 		res.send(editedAuthor);
-		88;
 	} catch (error) {
 		next(error);
 	}
