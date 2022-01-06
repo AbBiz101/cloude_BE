@@ -104,22 +104,22 @@ blogpostRounter.delete('/:postID', async (req, res, next) => {
 	}
 });
 
-// blogpostRounter.get('/:id/downloadPDF', (req, res, next) => {
-// 	try {
-// 		res.setHeader('Content-Disposition', 'attachment; filename=blogpost.pdf');
-// 		const source = pdfReadableStream({ firstName: 'blogpost' });
-// 		const destination = res;
-// 		console.error('req send');
-// 		pipeline(source, destination, (err) => {
-// 			if (err) {
-// 				next(err);
-// 			}
-// 		});
-// 	} catch (error) {
-// 		console.error('req send');
-// 		next(error);
-// 	}
-// });
+blogpostRounter.get('/:id/downloadPDF', (req, res, next) => {
+	try {
+		res.setHeader('Content-Disposition', 'attachment; filename=blogpost.pdf');
+		const source = pdfReadableStream({ firstName: 'blogpost' });
+		const destination = res;
+		console.error('req send');
+		pipeline(source, destination, (err) => {
+			if (err) {
+				next(err);
+			}
+		});
+	} catch (error) {
+		console.error('req send');
+		next(error);
+	}
+});
 
 // blogpostRounter.get('/downloadJSON', async (req, res, next) => {
 // 	try {
